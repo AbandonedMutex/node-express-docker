@@ -4,12 +4,22 @@ services:
         ports:
             - "80:80"
     node-app:
+        deploy:
+            replicas: 2
+            restart_policy:
+                condition: any
+            update_config:
+                parallelism: 1
+                delay: 15s                
         build:
             context: .
             args:
                 NODE_ENV: production
         environment:
             - NODE_ENV=production
+            - MONGO_USER=test
+            - MONGO_PASSWORD=password
+            - SESSION_SECRET=secret
         command: node index.js
     mongo-db:
         environment:
